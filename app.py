@@ -7,7 +7,7 @@ from telegram.utils.helpers import mention_markdown
 
 from database import BotDatabase
 
-TOKEN = os.getenv('TGBOT_TOKEN')
+TOKEN = os.getenv('7649317053:AAEuahOjsqpu2aqQGs5qlJCsKvL35qU-leo')
 
 logging.basicConfig(filename='logs.log', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -15,8 +15,7 @@ db = BotDatabase('database.db')
 
 
 def start_command(update, context):
-    message = 'Hey! I can help notify everyone 📢 in the group when someone needs them. \
-Everyone who wishes to receive mentions needs to /in to opt-in. All opted-in users can then be mentioned using /all'
+    message = 'Բոլորին ալօի համար՝ /alo [տեոստ] 📢'
     context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
 
@@ -83,7 +82,7 @@ dispatcher = updater.dispatcher
 
 handlers = [
     CommandHandler('in', in_command),
-    CommandHandler('all', all_command),
+    CommandHandler('alo', all_command),
     CommandHandler('out', out_command),
     CommandHandler('start', start_command),
     CommandHandler('stats', stats_command),
