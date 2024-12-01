@@ -1,3 +1,5 @@
+RUN apt-get update && apt-get install -y libpq-dev
+
 FROM python:3-slim
 
 WORKDIR /app
