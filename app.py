@@ -2,12 +2,13 @@ import os
 import logging
 
 import telegram
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, MessageHandler
+from telegram.ext.filters import Command
 from telegram.utils.helpers import mention_markdown
 
 from database import BotDatabase
 
-TOKEN = os.getenv('7649317053:AAEuahOjsqpu2aqQGs5qlJCsKvL35qU-leo')
+TOKEN = '7649317053:AAEuahOjsqpu2aqQGs5qlJCsKvL35qU-leo'  # Токен бота
 
 logging.basicConfig(filename='logs.log', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -86,7 +87,7 @@ handlers = [
     CommandHandler('out', out_command),
     CommandHandler('start', start_command),
     CommandHandler('stats', stats_command),
-    MessageHandler(Filters.command, unknown_command),
+    MessageHandler(Command(), unknown_command),  # Исправлено Filters.command → Command()
 ]
 
 for handler in handlers:
