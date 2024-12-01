@@ -16,5 +16,8 @@ RUN pip3 install -r requirements.txt
 # Копируем остальные файлы проекта в контейнер
 COPY . .
 
+# Устанавливаем переменные окружения для подключения к базе данных
+ENV DB_CONNSTRING="your_postgres_connection_string_here"
+
 # Команда для запуска приложения
 CMD [ "python3", "app.py"]
