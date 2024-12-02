@@ -9,6 +9,7 @@ COPY . /app
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install gevent  # Устанавливаем gevent для асинхронности
 
 # Открываем порт 8080
 EXPOSE 8080
