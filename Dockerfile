@@ -1,20 +1,17 @@
-# Используем стабильную версию Python
+# Используем официальный Python-образ
 FROM python:3.10-slim
-
-# Устанавливаем системные зависимости
-RUN apt-get update && apt-get install -y --no-install-recommends libsqlite3-dev && apt-get clean
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем файл зависимостей
-COPY requirements.txt .
-
-# Устанавливаем Python-зависимости
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Копируем проект
+# Копируем все файлы из текущей директории в контейнер
 COPY . .
 
-# Команда для запуска бота
-CMD ["python3", "app.py"]
+# Устанавливаем зависимости
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Открываем порт для связи с внешним миром
+EXPOSE 8080
+
+# Запускаем приложение
+CMD ["python", "app.py"]
