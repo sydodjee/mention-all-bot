@@ -1,6 +1,5 @@
 import sqlite3
 
-
 class BotDatabase:
     def __init__(self, filename="database.db"):
         self.conn = sqlite3.connect(filename, check_same_thread=False)
