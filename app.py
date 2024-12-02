@@ -4,7 +4,7 @@ import logging
 import asyncio
 from telegram import Bot, Update
 from telegram.ext import Application, CommandHandler
-from flask import Flask, request
+from quart import Quart, request
 from database import BotDatabase
 
 load_dotenv()
@@ -13,8 +13,8 @@ load_dotenv()
 db = BotDatabase('database.db')
 
 # Устанавливаем токен из переменной окружения
-TOKEN = '7649317053:AAEuahOjsqpu2aqQGs5qlJCsKvL35qU-leo'
-if TOKEN is None:
+TOKEN = os.getenv("BOT_TOKEN")
+if not TOKEN:
     raise ValueError("Токен бота не найден в переменной окружения")
 
 # Настроим логирование
@@ -24,7 +24,7 @@ logging.basicConfig(filename='logs.log', format='%(asctime)s - %(name)s - %(leve
 bot = Bot(token=TOKEN)
 
 # Создаем объект Flask приложения
-app = Flask(__name__)
+app = Quart(__name__)
 
 # Команда /start - Приветствие
 async def start_command(update, context):
@@ -70,15 +70,19 @@ application.add_handler(CommandHandler('all', all_command))
 # Вебхук для обработки сообщений
 @app.route('/webhook', methods=['POST'])
 async def webhook():
-    json_str = request.get_data().decode('UTF-8')
-    update = Update.de_json(json_str, bot)
+    json_str = await request.get_data()  # асинхронное получение данных
+    update = Update.de_json(json_str.decode('UTF-8'), bot)
     await application.process_update(update)
     return '', 200  # Ответ для подтверждения обработки
 
 # Добавляем обработчик для пути "/"
 @app.route('/')
-def index():
+async def index():
     return 'Hello, world!'
+
+# Устанавливаем вебхук
+webhook_url = "https://yourdomain.com/webhook"  # замените на свой URL
+application.bot.set_webhook(url=webhook_url)
 
 # Запуск Flask приложения
 if __name__ == "__main__":
