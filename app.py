@@ -1,7 +1,7 @@
 import os
 import logging
 from telegram import Bot, Update
-from telegram.ext import CommandHandler, MessageHandler, Dispatcher
+from telegram.ext import CommandHandler, MessageHandler, Application
 from telegram.ext.filters import Filters
 from flask import Flask, request
 from database import BotDatabase
@@ -61,25 +61,25 @@ handlers = [
     CommandHandler('all', all_command),
 ]
 
-# Создаем диспетчер
-dispatcher = Dispatcher(bot, None)
+# Создаем объект Application (замена Dispatcher)
+application = Application.builder().token(TOKEN).build()
 
-# Добавляем обработчики команд в диспетчер
+# Добавляем обработчики команд в приложение
 for handler in handlers:
-    dispatcher.add_handler(handler)
+    application.add_handler(handler)
 
 # Вебхук для обработки сообщений
 @app.route('/webhook', methods=['POST'])
 def webhook():
     json_str = request.get_data().decode('UTF-8')
     update = Update.de_json(json_str, bot)
-    dispatcher.process_update(update)
+    application.process_update(update)
     return 'ok'
 
 # Устанавливаем вебхук на URL, предоставленный Render
 webhook_url = 'https://mention-all-bot.onrender.com/webhook'  # Замените на URL вашего приложения на Render
-bot.set_webhook(url=webhook_url)
+application.bot.set_webhook(url=webhook_url)
 
-# Запускаем Flask приложение
+# Запускаем приложение
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    application.run_polling()
