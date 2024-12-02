@@ -80,7 +80,7 @@ def index():
     return 'Hello, world!'
 
 # Устанавливаем вебхук
-webhook_url = "https://yourdomain.com/webhook"  # замените на свой URL
+webhook_url = "https://mention-all-bot.onrender.com/webhook"  # замените на свой URL
 application.bot.set_webhook(url=webhook_url)
 
 # Запуск Flask приложения
