@@ -70,4 +70,8 @@ async def main():
 
 if __name__ == "__main__":
     import asyncio
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except RuntimeError as e:
+        if str(e) == "Cannot close a running event loop":
+            pass  # Игнорируем ошибку, если она возникает из-за закрытия цикла
