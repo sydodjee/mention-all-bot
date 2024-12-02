@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import os
 import logging
 import asyncio  # Импортируем asyncio для асинхронных операций
@@ -6,11 +7,15 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from flask import Flask, request
 from database import BotDatabase
 
+load_dotenv()
+
 # Инициализация базы данных
 db = BotDatabase('database.db')
 
 # Устанавливаем токен из переменной окружения
 TOKEN = os.getenv('TGBOT_TOKEN')
+if TOKEN is None:
+    raise ValueError("Токен бота не найден в переменной окружения")
 
 # Настроим логирование
 logging.basicConfig(filename='logs.log', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
