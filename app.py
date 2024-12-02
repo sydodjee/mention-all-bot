@@ -13,7 +13,7 @@ load_dotenv()
 db = BotDatabase('database.db')
 
 # Устанавливаем токен из переменной окружения
-TOKEN = os.getenv('TGBOT_TOKEN')
+TOKEN = '7649317053:AAEuahOjsqpu2aqQGs5qlJCsKvL35qU-leo'
 if TOKEN is None:
     raise ValueError("Токен бота не найден в переменной окружения")
 
