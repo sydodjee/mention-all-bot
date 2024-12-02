@@ -13,8 +13,8 @@ load_dotenv()
 db = BotDatabase('database.db')
 
 # Устанавливаем токен из переменной окружения
-TOKEN = '7649317053:AAEuahOjsqpu2aqQGs5qlJCsKvL35qU-leo'
-if TOKEN is None:
+TOKEN = os.getenv('BOT_TOKEN')
+if not TOKEN:
     raise ValueError("Токен бота не найден в переменной окружения")
 
 # Настроим логирование
@@ -67,10 +67,22 @@ application.add_handler(CommandHandler('in', in_command))
 application.add_handler(CommandHandler('out', out_command))
 application.add_handler(CommandHandler('all', all_command))
 
-# Вебхук для обработки сообщений
+# Вебхук для обработки сообщений (с асинхронной обработкой)
 @app.route('/webhook', methods=['POST'])
-def webhook():
+async def webhook():
     json_str = request.get_data().decode('UTF-8')
     update = Update.de_json(json_str, bot)
-    application.bot.set_webhook(url=webhook_url)  # Убедитесь, что этот вызов асинхронный
-    asyncio.create_task(application.process_update(update)
+    await application.process_update(update)  # Асинхронная обработка
+
+if __name__ == '__main__':
+    # Настроим вебхук
+    webhook_url = os.getenv('WEBHOOK_URL')  # Убедитесь, что WEBHOOK_URL правильно настроен в .env
+    application.bot.set_webhook(url=webhook_url)
+    
+    # Запускаем Flask в асинхронной среде
+    from gevent import pywsgi
+    from gevent import monkey
+    monkey.patch_all()  # Это важно для асинхронности
+
+    server = pywsgi.WSGIServer(('0.0.0.0', 8080), app)
+    server.serve_forever()
