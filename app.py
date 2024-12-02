@@ -1,8 +1,7 @@
 import os
 import logging
 from telegram import Bot, Update
-from telegram.ext import CommandHandler, MessageHandler, Application
-from telegram.ext import Filters
+from telegram.ext import CommandHandler, MessageHandler, Application, Filters
 from flask import Flask, request
 from database import BotDatabase
 
@@ -82,4 +81,4 @@ application.bot.set_webhook(url=webhook_url)
 
 # Запускаем приложение
 if __name__ == "__main__":
-    application.run_polling()
+    app.run(debug=True, host='0.0.0.0', port=8080)
