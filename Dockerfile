@@ -1,23 +1,12 @@
-# Используем официальный образ Python
 FROM python:3-slim
 
-# Обновляем пакеты и устанавливаем libpq-dev, который необходим для работы с PostgreSQL
-RUN apt-get update && apt-get install -y libpq-dev
+RUN apt-get update && apt-get install -y sqlite3
 
-# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем файл с зависимостями requirements.txt в контейнер
 COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-# Устанавливаем все зависимости из requirements.txt
-RUN pip3 install -r requirements.txt
-
-# Копируем остальные файлы проекта в контейнер
 COPY . .
 
-# Устанавливаем переменные окружения для подключения к базе данных
-ENV DB_CONNSTRING="your_postgres_connection_string_here"
-
-# Команда для запуска приложения
-CMD [ "python3", "app.py"]
+CMD ["python", "app.py"]
