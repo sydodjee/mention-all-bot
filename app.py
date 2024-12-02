@@ -63,11 +63,4 @@ async def main():
     application.add_handler(CommandHandler("all", all_command))
 
     # Запуск бота
-    await application.run_polling()
-
-    db.close()
-
-
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    await application.run_polling
