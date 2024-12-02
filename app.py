@@ -76,7 +76,7 @@ def webhook():
     return 'ok'
 
 # Устанавливаем вебхук на URL, предоставленный Render
-webhook_url = 'https://your-app-name.onrender.com/webhook'  # Замените на URL вашего приложения на Render
+webhook_url = 'https://mention-all-bot.onrender.com/webhook'  # Замените на URL вашего приложения на Render
 bot.set_webhook(url=webhook_url)
 
 # Запускаем Flask приложение
