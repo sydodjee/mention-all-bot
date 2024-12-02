@@ -1,4 +1,4 @@
 python-telegram-bot==20.1
 werkzeug==2.2.2  # Указана версия, чтобы избежать конфликтов с Flask
 Flask==2.2.3
-python-dotenv
+python-dotenv==1.0.0
