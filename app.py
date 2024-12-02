@@ -4,9 +4,11 @@ import logging
 from telegram import Bot, Update
 from telegram.ext import Application, CommandHandler
 from quart import Quart, request
-import asyncio
+import hypercorn.asyncio
+from hypercorn.config import Config
 from database import BotDatabase
 
+# Загружаем переменные окружения
 load_dotenv()
 
 # Инициализация базы данных
@@ -70,9 +72,9 @@ application.add_handler(CommandHandler('all', all_command))
 # Вебхук для обработки сообщений
 @app.route('/webhook', methods=['POST'])
 async def webhook():
-    json_str = await request.get_data()  # асинхронно получаем данные
-    update = Update.de_json(json_str.decode('UTF-8'), bot)  # передаем в Telegram бот
-    await application.process_update(update)  # асинхронно обрабатываем обновление
+    json_str = await request.get_data().decode('UTF-8')  # асинхронное получение данных
+    update = Update.de_json(json_str, bot)
+    await application.process_update(update)
     return '', 200  # Ответ для подтверждения обработки
 
 # Добавляем обработчик для пути "/"
@@ -81,11 +83,11 @@ async def index():
     return 'Hello, world!'
 
 # Устанавливаем вебхук
-async def set_webhook():
-    webhook_url = "https://your-app-url.com/webhook"  # замените на свой URL
-    await application.bot.set_webhook(url=webhook_url)
+webhook_url = "https://mention-all-bot.onrender.com/webhook"  # замените на свой URL
+await application.bot.set_webhook(url=webhook_url)
 
-# Запуск приложения
+# Запуск приложения с Hypercorn
 if __name__ == "__main__":
-    asyncio.run(set_webhook())  # Устанавливаем вебхук асинхронно
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    config = Config()
+    config.bind = ["0.0.0.0:8080"]  # Привязываем к порту 8080
+    hypercorn.asyncio.run(app, config)
