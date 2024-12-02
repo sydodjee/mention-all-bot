@@ -10,7 +10,7 @@ logging.basicConfig(
 )
 
 # Получаем токен бота из переменной окружения
-TOKEN = os.getenv("7649317053:AAEuahOjsqpu2aqQGs5qlJCsKvL35qU-leo")
+TOKEN = os.getenv("BOT_TOKEN")
 db = BotDatabase()
 
 
