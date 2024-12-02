@@ -1,5 +1,6 @@
 import os
 import logging
+import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, CallbackContext
 from database import BotDatabase
@@ -63,15 +64,12 @@ async def main():
     application.add_handler(CommandHandler("all", all_command))
 
     # Запуск бота
-    await application.run_polling()
+    await application.initialize()  # Инициализация приложения
+    await application.run_polling()  # Запуск поллинга
+    await application.shutdown()  # Завершение работы приложения
 
     db.close()
 
 
 if __name__ == "__main__":
-    import asyncio
-    try:
-        asyncio.run(main())
-    except RuntimeError as e:
-        if str(e) == "Cannot close a running event loop":
-            pass  # Игнорируем ошибку, если она возникает из-за закрытия цикла
+    asyncio.run(main())  # Запуск асинхронной главной функции
