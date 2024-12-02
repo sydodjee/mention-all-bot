@@ -3,3 +3,4 @@ werkzeug==2.2.2  # Указана версия, чтобы избежать ко
 Flask==2.2.3
 python-dotenv==1.0.0
 quart
+hypercorn
