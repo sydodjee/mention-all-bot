@@ -1,9 +1,9 @@
 from dotenv import load_dotenv
 import os
 import logging
-import asyncio  # Импортируем asyncio для асинхронных операций
+import asyncio
 from telegram import Bot, Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters
+from telegram.ext import Application, CommandHandler
 from flask import Flask, request
 from database import BotDatabase
 
@@ -13,8 +13,8 @@ load_dotenv()
 db = BotDatabase('database.db')
 
 # Устанавливаем токен из переменной окружения
-TOKEN = os.getenv('BOT_TOKEN')
-if not TOKEN:
+TOKEN = '7649317053:AAEuahOjsqpu2aqQGs5qlJCsKvL35qU-leo'
+if TOKEN is None:
     raise ValueError("Токен бота не найден в переменной окружения")
 
 # Настроим логирование
@@ -67,22 +67,19 @@ application.add_handler(CommandHandler('in', in_command))
 application.add_handler(CommandHandler('out', out_command))
 application.add_handler(CommandHandler('all', all_command))
 
-# Вебхук для обработки сообщений (с асинхронной обработкой)
+# Вебхук для обработки сообщений
 @app.route('/webhook', methods=['POST'])
 async def webhook():
     json_str = request.get_data().decode('UTF-8')
     update = Update.de_json(json_str, bot)
-    await application.process_update(update)  # Асинхронная обработка
+    await application.process_update(update)
+    return '', 200  # Ответ для подтверждения обработки
 
-if __name__ == '__main__':
-    # Настроим вебхук
-    webhook_url = os.getenv('WEBHOOK_URL')  # Убедитесь, что WEBHOOK_URL правильно настроен в .env
-    application.bot.set_webhook(url=webhook_url)
-    
-    # Запускаем Flask в асинхронной среде
-    from gevent import pywsgi
-    from gevent import monkey
-    monkey.patch_all()  # Это важно для асинхронности
+# Добавляем обработчик для пути "/"
+@app.route('/')
+def index():
+    return 'Hello, world!'
 
-    server = pywsgi.WSGIServer(('0.0.0.0', 8080), app)
-    server.serve_forever()
+# Запуск Flask приложения
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=8080)
