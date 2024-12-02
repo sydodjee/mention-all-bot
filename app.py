@@ -2,7 +2,7 @@ import os
 import logging
 from telegram import Bot, Update
 from telegram.ext import CommandHandler, MessageHandler, Application
-from telegram.ext.filters import Filters
+from telegram.ext import Filters
 from flask import Flask, request
 from database import BotDatabase
 
